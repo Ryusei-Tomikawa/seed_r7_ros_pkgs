@@ -1,0 +1,22 @@
+# Global Planner parameter
+
+GlobalPlanner:
+
+ old_navfn_behavior: false
+ 
+ # true: calculate many  dfalse: calculate few
+ use_quadratic: true
+ # dtrue: dijkstra  false: AStar 
+ use_dijkstra: false
+ # true: gridpath   dfalse: slopepath
+ use_grid_path: false
+
+ # condider slope
+ use_slopemode: false
+ 
+ allow_unknown: true
+ planner_window_x: 0.0
+ planner_window_y: 0.0
+ default_tolerance: 0.0
+ publish_scale: 100
+ outline_map: true
