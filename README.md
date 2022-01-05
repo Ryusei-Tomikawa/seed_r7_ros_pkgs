@@ -1,0 +1,2 @@
+# seed_r7_ros_pkgs
+既存のseed_r7_ros_pkgを自分用に編集したパッケージ
