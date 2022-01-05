@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<robot name="SEED-Noid-Mover-typeF" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- The following included files set up definitions of parts of the robot body -->
+  <!-- wraps upperbody and hand-->
+  <!-- wraps lifter and wheels-->
+  <xacro:include filename="$(find seed_r7_description)/typef/noid-wheels.urdf.xacro" />
+ 
+ <!-- Now we can start using the macros included above to define the actual robot -->
+ <xacro:noid-wheels base_link="base_link"/>
+
+ <joint name="imu_joint" type="fixed">
+   <parent link="base_link"/>
+   <child link="imu_link"/>
+   <origin xyz="0 0.16 0.19" rpy="0 0 0"/>
+ </joint>
+
+ <link name="imu_link"/>
+
+ <gazebo reference="imu_link">
+    <gravity>true</gravity>
+    <sensor type="imu" name="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+    </sensor>
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+      <alwaysOn>true</alwaysOn>
+      <bodyName>imu_link</bodyName>
+      <frameName>imu_link</frameName>
+      <topicName>imu</topicName>
+      <serviceName>imu_service</serviceName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <!-- <updateRate>0</updateRate> -->
+      <updateRateHZ>10.0</updateRateHZ>
+      <xyzOffset>0 0 0</xyzOffset>
+      <rpyOffset>0 0 0</rpyOffset>
+      <imu>
+        <noise>
+          <type>gaussian</type>
+          <rate>
+            <mean>0.0</mean>
+            <stddev>2e-4</stddev>
+            <bias_mean>0.0000075</bias_mean>
+            <bias_stddev>0.0000008</bias_stddev>
+          </rate>
+          <accel>
+            <mean>0.0</mean>
+            <stddev>1.7e-2</stddev>
+            <bias_mean>0.1</bias_mean>
+            <bias_stddev>0.001</bias_stddev>
+          </accel>
+        </noise>
+      </imu>
+    </plugin>
+  </gazebo>
+
+ <!-- gazebo settings -->
+ <!-- camera -->
+ <!-- <link name="camera_frame" /> -->
+ <!-- <link name="camera_optical_frame" /> -->
+ <!-- <joint name="camera_setting" type="fixed" > -->
+ <!--   <parent link="head_link" /> -->
+ <!--   <child  link="camera_frame" /> -->
+ <!--   <!-\- <origin xyz="0 0.035 0.09" rpy="0 0.15 0" /> -\-> -->
+ <!--   <origin xyz="0.1 0.035 0.09" rpy="0 0.15 0" /> -->
+ <!-- </joint> -->
+ <!-- <joint name="camera_optical" type="fixed" > -->
+ <!--   <parent link="camera_frame" /> -->
+ <!--   <child  link="camera_optical_frame" /> -->
+ <!--   <origin xyz="0 0 0" rpy="-1.570796326795 0 -1.570796326795" /> -->
+ <!-- </joint> -->
+ <!-- <xacro:gazebo_camera link_name="camera_frame" -->
+ <!--                      frame_name="camera_optical_frame" /> -->
+
+ <!-- laser -->
+ <xacro:gazebo_laser_sensor link_name="wheels_base_laser_link"
+                            frame_name="wheels_base_laser_link" />
+
+ <!-- joint control -->
+ <xacro:gazebo_trajectory_controller />
+
+ <!-- mobile base -->
+ <xacro:gazebo_base_controller base_frame="base_link" />
+
+ <!-- mimic joints -->
+ <gazebo>
+   <plugin name="mimic_updater" filename="libmimic_plugin.so">
+     <!-- lifter -->
+     <mimic joint="knee_joint"  offset="0.0" multiplier="-1.0"
+            P="100" I="0.1" D="10" i_max="0" i_min="0"
+            command_max="200" command_min="-200" velocity="true">
+       knee_joint_mimic
+     </mimic>
+     <mimic joint="ankle_joint"  offset="0.0" multiplier="-1.0"
+            P="100" I="0.1" D="10" i_max="0" i_min="0"
+            command_max="200" command_min="-200" velocity="true">
+       ankle_joint_mimic
+     </mimic>
+     <!-- lifter(dummy) -->
+     <mimic joint="knee_joint"  offset="0.0" multiplier="-1.0"
+            P="100" I="0.0" D="10" i_max="0" i_min="0"
+            command_max="200" command_min="-200" velocity="true">
+       knee_joint_dummy
+     </mimic>
+     <mimic joint="ankle_joint"  offset="0.0" multiplier="1.0"
+            P="100" I="0.0" D="10" i_max="0" i_min="0"
+            command_max="200" command_min="-200" velocity="true">
+       ankle_joint_dummy
+     </mimic>
+     <!-- lhand -->
+     <mimic joint="l_thumb_joint"  offset="0.0" multiplier="-1.0"
+            P="10" I="0.0" D="1" i_max="0" i_min="0"
+            command_max="50" command_min="-50" velocity="true">
+       l_indexbase_joint
+     </mimic>
+     <!-- <mimic joint="l_thumb_joint"  offset="-0.2" multiplier="-0.3"
+            P="30" I="0.0" D="0.03" i_max="0" i_min="0"
+            command_max="50" command_min="-50">
+       l_indexmid_joint
+     </mimic>
+     <mimic joint="l_thumb_joint"  offset="-0.2" multiplier="-0.3"
+            P="30" I="0.0" D="0.03" i_max="0" i_min="0"
+            command_max="50" command_min="-50">
+       l_indexend_joint
+     </mimic> -->
+     <!-- rhand -->
+     <mimic joint="r_thumb_joint"  offset="0.0" multiplier="-1.0"
+            P="10" I="0.0" D="1" i_max="0" i_min="0"
+            command_max="50" command_min="-50" velocity="true">
+       r_indexbase_joint
+     </mimic>
+     <!-- <mimic joint="r_thumb_joint"  offset="0.2" multiplier="-0.3"
+            P="30" I="0.0" D="0.03" i_max="0" i_min="0"
+            command_max="50" command_min="-50">
+       r_indexmid_joint
+     </mimic>
+     <mimic joint="r_thumb_joint"  offset="0.2" multiplier="-0.3"
+            P="30" I="0.0" D="0.03" i_max="0" i_min="0"
+            command_max="50" command_min="-50">
+       r_indexend_joint
+     </mimic> -->
+   </plugin>
+ </gazebo>
+
+</robot>
