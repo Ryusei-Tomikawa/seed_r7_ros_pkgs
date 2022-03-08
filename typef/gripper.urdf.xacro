@@ -1,0 +1,267 @@
+<?xml version="1.0" ?>
+<robot name="gripper" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- <xacro:include filename="$(find test)/urdf/common_properties.xacro"/> -->
+  <xacro:include filename="$(find test)/urdf/gripper.transmission.xacro" />
+  <xacro:include filename="$(find test)/urdf/limits.urdf.xacro" />
+
+  <link name="l_hand_link">
+  </link>
+
+  <joint name="gripper_suppout1_joint" type="fixed">
+    <parent link="l_hand_link"/>
+    <child link="gripper_support1_link"/>
+    <origin xyz="0 0 0" rpy="0 3.14 0" />
+  </joint>
+
+  <link name="gripper_support1_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.03 0.04 0.03"/>
+      </geometry>
+      <material name="grey" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.03 0.04 0.03"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="gripper_support1_joint" type="fixed">
+    <parent link="gripper_support1_link"/>
+    <child link="gripper_support2_link"/>
+    <origin xyz="0.02 0 0.03" rpy="0 0 0" />
+  </joint>
+
+  <link name="gripper_support2_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.07 0.04 0.03"/>
+      </geometry>
+      <material name="grey" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.07 0.04 0.03"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="gripper_base_joint" type="fixed">
+    <parent link="gripper_support2_link"/>
+    <child link="gripper_base_link"/>
+    <origin xyz="0.05 0 0" rpy="0 1.57 0" />
+  </joint>
+  <link name="gripper_base_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.1"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.03 0.12 0.03"/>
+        </geometry>
+        <material name="grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.03 0.12 0.03"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="motor_joint" type="fixed">
+        <parent link="gripper_base_link"/>
+        <child link="motor_link"/>
+        <origin xyz="0 -0.075 0" rpy="0 0 0" />
+    </joint>
+
+    <link name="motor_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.1"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.03 0.03 0.03"/>
+        </geometry>
+        <material name="Black" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.03 0.03 0.03"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="seed_driver_joint" type="fixed">
+        <parent link="motor_link"/>
+        <child link="seed_driver_link"/>
+        <origin xyz="0 -0.0165 0" rpy="0 0 0" />
+    </joint>
+
+    <link name="seed_driver_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.1"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.03 0.003 0.03"/>
+        </geometry>
+        <material name="blue" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.03 0.003 0.03"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="gripper_joint_l" type="prismatic">
+      <origin xyz="0.0 0.049 0.026" rpy="0 0 3.14" />
+      <parent link="gripper_base_link"/>
+      <child link="gripper_link_l"/>
+      <axis xyz="0 1 0" />
+      <limit effort="2" velocity="0.1" lower="0" upper="${finger_joint}"/> 
+    </joint>
+
+    <link name="gripper_link_l">
+      <inertial>
+        <origin xyz="0 -0.001 0" rpy="0 0 0" />
+        <mass value="0.01"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+  			
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/gripper/meshes/finger.dae" />
+        </geometry>
+        <material name="light_black" />
+      </visual>
+  			
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/gripper/meshes/finger_convex.dae" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="gripper_joint_r" type="prismatic">
+      <origin xyz="0 -0.049 0.026" rpy="0 0 0" />
+      <parent link="gripper_base_link"/>
+      <child link="gripper_link_r"/>
+      <axis xyz="0 1 0" />
+      <limit effort="2" velocity="0.1" lower="0" upper="${finger_joint}"/> 
+    </joint>
+  
+    <link name="gripper_link_r">
+      <inertial>
+        <origin xyz="0.000 -0.001 0" rpy="0 0 0" />
+        <mass value="0.01"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/gripper/meshes/finger.dae" />
+        </geometry>
+        <material name="light_black" />
+      </visual>
+      <collision>
+        <origin xyz="0.000 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/gripper/meshes/finger_convex.dae" />
+        </geometry>
+      </collision>
+    </link>
+
+
+    <link name="gripper_grasp_link">
+    </link>
+
+    <joint name="gripper_grasp_joint" type="fixed">
+      <origin xyz="0 0 0.05" rpy="0 0 0" />
+      <parent link="gripper_base_link"/>
+      <child link="gripper_grasp_link"/>
+      <axis xyz="0 1 0" />
+    </joint>
+  
+
+
+    <gazebo reference="gripper_support1_link">
+      <material>Gazebo/Grey</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+
+    <gazebo reference="gripper_support2_link">
+      <material>Gazebo/Grey</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+
+    <gazebo reference="gripper_base_link">
+      <material>Gazebo/BlueTransparent</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+
+    <gazebo reference="motor_link">
+      <material>Gazebo/Black</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+
+    <gazebo reference="seed_driver_link">
+      <material>Gazebo/SkyBlue</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+
+    <gazebo reference="gripper_link_r">
+      <material>Gazebo/DarkGrey</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>true</selfCollide>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <maxContacts>100</maxContacts>
+    </gazebo>
+
+    <gazebo reference="gripper_link_l">
+      <material>Gazebo/DarkGrey</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>true</selfCollide>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <maxContacts>100</maxContacts>
+    </gazebo>
+
+    <gazebo>
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+      </plugin>
+    </gazebo>
+
+</robot>

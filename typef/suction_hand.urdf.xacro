@@ -1,0 +1,122 @@
+<?xml version="1.0" ?>
+<robot name="suction_hand" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find test)/urdf/common_properties.xacro"/>
+  <!-- <xacro:include filename="$(find test)/urdf/gripper.transmission.xacro" /> -->
+  <!-- <xacro:include filename="$(find test)/urdf/limits.urdf.xacro" /> -->
+
+  <link name="r_hand_link">
+  </link>
+
+  <joint name="suction_base_joint" type="fixed">
+    <parent link="r_hand_link"/>
+    <child link="suction_base_link"/>
+    <origin xyz="-0.03 -0.03 0" rpy="3.14 0 -4.71" />
+  </joint>
+  <link name="suction_base_link">
+      <inertial>
+        <origin xyz="0.02 0.02 0" rpy="0 0 0"/>
+        <mass value="0.33"/>
+        <inertia ixx="0.000121715" ixy="0" ixz="0" iyy="0.000458315" iyz="0" izz="0.000468655" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/suction_base/meshes/suction_base.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/suction_base/meshes/suction_base.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="suction_pad_l_joint" type="fixed">
+        <parent link="suction_base_link"/>
+        <child link="suction_pad_l_link"/>
+        <origin xyz="0.013 0.0 0.055" rpy="0 0 0" />
+    </joint>
+    <link name="suction_pad_l_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.545"/>
+        <inertia ixx="5.86778e-05" ixy="0" ixz="0" iyy="5.86778e-05" iyz="0" izz="5.93426e-06" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/suction_pad/meshes/suction_pad.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="blue"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/suction_pad/meshes/suction_pad.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="suction_pad_r_joint" type="fixed">
+      <parent link="suction_base_link"/>
+      <child link="suction_pad_r_link"/>
+      <origin xyz="0.051 0.0 0.055" rpy="0 0 0" />
+    </joint>
+  
+    <link name="suction_pad_r_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.545"/>
+        <inertia ixx="5.86778e-05" ixy="0" ixz="0" iyy="5.86778e-05" iyz="0" izz="5.93426e-06" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/suction_pad/meshes/suction_pad.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="blue"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://test/gazebo_models/suction_pad/meshes/suction_pad.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="suction_vacuum_link">
+    </link>
+
+    <joint name="suction_vucuum_joint" type="fixed">
+      <parent link="suction_base_link"/>
+      <child link="suction_vacuum_link"/>
+      <origin xyz="0.031 -0.04 0.055" rpy="0 0 0" />
+    </joint>
+
+    <gazebo reference="suction_base_link">
+      <material>Gazebo/Grey</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+
+    <gazebo reference="suction_pad_r_link">
+      <material>Gazebo/SkyBlue</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+
+    <gazebo reference="suction_pad_l_link">
+      <material>Gazebo/SkyBlue</material>
+      <turnGravityOff>false</turnGravityOff>
+      <selfCollide>false</selfCollide>
+    </gazebo>
+
+    <gazebo>
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+      </plugin>
+    </gazebo>
+
+</robot>
